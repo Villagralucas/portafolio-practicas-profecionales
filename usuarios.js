@@ -11,9 +11,13 @@ const mensajeFormulario = document.getElementById('mensaje-formulario');
 // Ventanas modales de Bootstrap (se abren con .show() y se cierran con .hide()).
 const modalUsuario = new bootstrap.Modal(document.getElementById('modal-usuario'));
 const modalVer = new bootstrap.Modal(document.getElementById('modal-ver'));
+const modalEliminar = new bootstrap.Modal(document.getElementById('modal-eliminar'));
 
 // Si es null, el formulario agrega un usuario. Si tiene un número, edita ese usuario.
 let idEnEdicion = null;
+
+// ID del usuario que se va a eliminar cuando se confirme en el modal.
+let idParaEliminar = null;
 
 // ---------- Lista de usuarios ----------
 
@@ -48,7 +52,7 @@ function mostrarUsuarios() {
         acciones.append(
             crearBoton('Ver', 'btn-outline-secondary', () => mostrarDetalle(usuario.id)),
             crearBoton('Editar', 'btn-outline-primary', () => abrirEdicion(usuario.id)),
-            crearBoton('Eliminar', 'btn-outline-danger', () => borrarUsuario(usuario.id))
+            crearBoton('Eliminar', 'btn-outline-danger', () => pedirConfirmacion(usuario.id))
         );
         fila.appendChild(acciones);
 
@@ -153,15 +157,23 @@ function mostrarDetalle(id) {
 
 // ---------- Eliminar usuario ----------
 
-function borrarUsuario(id) {
+// Abre el modal que pregunta si de verdad se quiere eliminar al usuario.
+function pedirConfirmacion(id) {
     const usuario = verUsuario(id);
-    const confirmado = confirm(`¿Seguro que querés eliminar a ${usuario.nombre} ${usuario.apellido} (DNI ${usuario.dni})?`);
-    if (!confirmado) return;
-
-    eliminarUsuario(id);
-    mensajeLista.textContent = `Se eliminó a ${usuario.nombre} ${usuario.apellido}.`;
-    mostrarUsuarios();
+    idParaEliminar = usuario.id;
+    document.getElementById('eliminar-nombre').textContent = `${usuario.nombre} ${usuario.apellido} (DNI ${usuario.dni})`;
+    modalEliminar.show();
 }
+
+// Al tocar "Eliminar" dentro del modal, se borra el usuario.
+document.getElementById('confirmar-eliminar').addEventListener('click', function () {
+    const usuario = verUsuario(idParaEliminar);
+    eliminarUsuario(idParaEliminar);
+
+    mensajeLista.textContent = `Se eliminó a ${usuario.nombre} ${usuario.apellido}.`;
+    modalEliminar.hide();
+    mostrarUsuarios();
+});
 
 // ---------- Al abrir la página ----------
 mostrarUsuarios();
