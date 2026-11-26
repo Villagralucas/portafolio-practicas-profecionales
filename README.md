@@ -24,8 +24,7 @@ Sigue el `index.html` del Taller de HTML & CSS, todo en la misma página:
 | Sección | Qué hace |
 |---|---|
 | Menú | Enlaces a cada sección y botón "Cerrar sesión" |
-| Bienvenida | "Bienvenido, usuario!" y último ingreso |
-| Inicio | Presentación |
+| Inicio | "Bienvenido, admin!" y último ingreso |
 | Administrar usuarios | Cantidad de usuarios y botón "+ Agregar usuario" (abre un modal) |
 | Ver usuarios | Buscador y tabla con botones Ver, Editar y Eliminar |
 | Acerca de mí | Presentación personal |
