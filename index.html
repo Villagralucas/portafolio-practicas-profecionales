@@ -4,25 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lucas - Portfolio personal</title>
-    <link rel="stylesheet" href="estilos.css?v=4">
+    <!-- Bootstrap primero y después mis estilos, para que los míos tengan prioridad -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="estilos.css?v=7">
 </head>
 <body>
     <header>
         <nav aria-label="Menú principal">
             <a href="#inicio">Inicio</a>
             <a href="#acerca-de-mi">Acerca de mí</a>
+            <a href="#administrar-usuarios">Usuarios</a>
             <a href="#mis-proyectos">Mis proyectos</a>
             <a href="#contacto">Contacto</a>
-            <a href="usuarios.html">Usuarios</a>
+            <button type="button" id="cerrar-sesion" class="btn btn-outline-light btn-sm">Cerrar sesión</button>
         </nav>
     </header>
     <main>
+        <!-- Bienvenida: la completa home.js con los datos de la sesión -->
         <section id="inicio">
-            <p class="detalle">MI PORTFOLIO PERSONAL</p>
-            <h1>Hola, soy Lucas.</h1>
-            <p>Bienvenido a mi página. Acá comparto mi presentación y los trabajos que voy realizando.</p>
-            <a class="boton" href="#mis-proyectos">Ver mis proyectos</a>
+            <h1>Bienvenido, <span id="usuario-nombre"></span>!</h1>
+            <p>Último ingreso: <span id="fecha-ingreso"></span></p>
         </section>
+
+        <!-- Administrar usuarios: cantidad y botón para agregar -->
+        <section id="administrar-usuarios">
+            <h2>Administrar usuarios</h2>
+            <p>Desde acá podés agregar usuarios. Para ver, editar o eliminar uno, usá los botones de la lista.</p>
+            <p>Usuarios registrados: <strong id="cantidad-usuarios">0</strong></p>
+            <button type="button" id="boton-agregar" class="btn btn-dark">+ Agregar usuario</button>
+        </section>
+
+        <!-- Ver usuarios: buscador y tabla -->
+        <section id="ver-usuarios">
+            <h2>Ver usuarios</h2>
+            <label for="buscar-usuario" class="form-label">Buscar usuario</label>
+            <input type="search" id="buscar-usuario" class="form-control mb-3" placeholder="Nombre, apellido, DNI o email">
+
+            <p id="mensaje-lista" class="text-success" role="status"></p>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Apellido</th>
+                            <th scope="col">DNI</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-usuarios"></tbody>
+                </table>
+            </div>
+            <p id="mensaje-busqueda" class="mt-3" role="status"></p>
+            <p class="aviso">Práctica escolar: usá datos ficticios. Se guardan solo en este navegador.</p>
+        </section>
+
         <section id="acerca-de-mi">
             <h2>Acerca de mí</h2>
             <div class="presentacion">
@@ -33,6 +71,7 @@
                 <div><img class="imagen-presentacion" src="imagenes/desarrollo.png" alt="Escritorio de desarrollo con una computadora y código en pantalla"></div>
             </div>
         </section>
+
         <section id="mis-proyectos">
             <h2>Mis proyectos</h2>
             <div class="proyectos">
@@ -42,6 +81,7 @@
                         <img class="imagen-proyecto" src="proyectos/harro/hamburguesas.png" alt="Hamburguesas de bacon y cheddar y de verduras de Harro Burger House">
                         <p>Página de una hamburguesería con un formulario de registro de clientes y una tabla para visualizar sus datos.</p>
                         <p>Realizada con HTML5 y una hoja de estilos CSS separada.</p>
+                        <a class="boton" href="proyectos/harro/index.html">Ver proyecto</a>
                     </div>
                 </details>
                 <details class="proyecto" name="proyectos">
@@ -56,6 +96,7 @@
                 </details>
             </div>
         </section>
+
         <section id="contacto">
             <h2>Contacto</h2>
             <p>Completá el formulario para dejar tu consulta.</p>
@@ -72,6 +113,98 @@
         </section>
     </main>
     <footer><p>Lucas · Portfolio personal</p><a href="#inicio">Volver al inicio</a></footer>
+
+    <!-- Modal: agregar o editar usuario (se usa el mismo formulario para las dos cosas) -->
+    <div class="modal fade" id="modal-usuario" tabindex="-1" aria-labelledby="titulo-formulario" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="formulario-usuario" class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="titulo-formulario">Agregar usuario</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="id-usuario" class="form-label">ID de usuario</label>
+                        <input type="text" id="id-usuario" class="form-control" readonly>
+                        <div class="form-text">Se genera automáticamente.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="form-nombre" class="form-label">Nombre</label>
+                        <input type="text" id="form-nombre" class="form-control" autocomplete="off" maxlength="80" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="form-apellido" class="form-label">Apellido</label>
+                        <input type="text" id="form-apellido" class="form-control" autocomplete="off" maxlength="80" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="form-dni" class="form-label">DNI</label>
+                        <input type="text" id="form-dni" class="form-control" inputmode="numeric" pattern="[0-9]{7,8}" maxlength="8" title="Ingresá 7 u 8 números, sin puntos" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="form-mail" class="form-label">Email</label>
+                        <input type="email" id="form-mail" class="form-control" autocomplete="off" maxlength="254" required>
+                    </div>
+                    <p id="mensaje-formulario" class="text-danger mb-0" role="alert"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-dark">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: ver los datos de un usuario -->
+    <div class="modal fade" id="modal-ver" tabindex="-1" aria-labelledby="titulo-ver" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="titulo-ver">Datos del usuario</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <dl class="row mb-0">
+                        <dt class="col-4">ID</dt>       <dd class="col-8" id="ver-id"></dd>
+                        <dt class="col-4">Nombre</dt>   <dd class="col-8" id="ver-nombre"></dd>
+                        <dt class="col-4">Apellido</dt> <dd class="col-8" id="ver-apellido"></dd>
+                        <dt class="col-4">DNI</dt>      <dd class="col-8" id="ver-dni"></dd>
+                        <dt class="col-4">Email</dt>    <dd class="col-8 text-break mb-0" id="ver-mail"></dd>
+                    </dl>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: confirmar antes de eliminar un usuario -->
+    <div class="modal fade" id="modal-eliminar" tabindex="-1" aria-labelledby="titulo-eliminar" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="titulo-eliminar">Eliminar usuario</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">¿Seguro que querés eliminar a <strong id="eliminar-nombre"></strong>? Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="confirmar-eliminar" class="btn btn-danger">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript de Bootstrap: hace funcionar los modales -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- El orden importa: cada archivo usa funciones de los anteriores. -->
+    <script src="home.js"></script>
+    <script src="bbdd.js"></script>
+    <script src="buscar_usuario.js"></script>
+    <script src="usuarios.js"></script>
     <script src="contacto.js"></script>
 </body>
 </html>

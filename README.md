@@ -1,25 +1,56 @@
 # Portfolio personal — Prácticas Profesionalizantes
 
-Página hecha con HTML, CSS y JavaScript, sin frameworks.
+Página hecha con HTML, CSS y JavaScript, con Bootstrap 5 para los estilos y los modales.
 
 ## Cómo abrirlo
 
-Abrí la carpeta en Visual Studio Code, hacé clic derecho en `index.html` y elegí
+Abrí la carpeta en Visual Studio Code, hacé clic derecho en `login.html` y elegí
 **Open with Live Server**. Los datos se guardan en el `localStorage` del
 navegador, así que conviene usar siempre la misma dirección y el mismo navegador.
+Bootstrap se carga desde internet, así que hace falta conexión.
+
+Usuario de prueba: `admin` / `1234`.
 
 ## Páginas
 
-- `index.html`: presentación, acerca de mí, proyectos en acordeón y formulario de contacto.
-- `usuarios.html`: alta de usuarios con ID automático y tabla de usuarios registrados.
-- `login.html`, `registro.html`, `admin.html`: versión anterior con login de administrador de prueba (usuario `admin`, contraseña `1234`).
+- `login.html`: inicio de sesión. Al entrar, lleva a `index.html`.
+- `index.html`: el portfolio. Si no hay sesión iniciada, vuelve al login.
 - `proyectos/harro/`: página de la hamburguesería Harro Burger House.
 
-## Archivos
+## Qué tiene `index.html`
 
-- `estilos.css`: estilos de todo el portfolio.
+Sigue el `index.html` del Taller de HTML & CSS, todo en la misma página:
+
+| Sección | Qué hace |
+|---|---|
+| Menú | Enlaces a cada sección y botón "Cerrar sesión" |
+| Inicio | "Bienvenido, admin!" y último ingreso |
+| Administrar usuarios | Cantidad de usuarios y botón "+ Agregar usuario" (abre un modal) |
+| Ver usuarios | Buscador y tabla con botones Ver, Editar y Eliminar |
+| Acerca de mí | Presentación personal |
+| Mis proyectos | Proyectos en acordeón |
+| Contacto | Formulario de consultas |
+
+En el taller, `form_usuario.html`, `editar_usuario.html`, `ver_usuario.html` y
+`lista_usuarios.html` son páginas separadas. Acá están integradas en el index:
+agregar y editar usan el mismo modal, y "Ver" abre otro modal con los datos.
+
+## Archivos JavaScript
+
+- `login.js`: revisa usuario y contraseña, guarda la sesión y pasa al index.
+- `home.js`: si no hay sesión vuelve al login, muestra la bienvenida y cierra la sesión.
+- `bbdd.js`: guarda y lee los usuarios en el `localStorage` (obtener, guardar, editar, ver y eliminar).
+  La primera vez que se abre la página carga 4 usuarios de ejemplo (inventados) para que la tabla no esté vacía.
+- `buscar_usuario.js`: filtra la tabla mientras se escribe.
+- `usuarios.js`: dibuja la tabla, abre los modales de agregar, editar y ver, y elimina usuarios.
 - `contacto.js`: guarda las consultas del formulario de contacto.
-- `usuarios.js`: registro de usuarios, validaciones, tabla y sesión de prueba.
+
+En `index.html` se cargan en ese orden (después del JavaScript de Bootstrap),
+porque cada uno usa funciones de los anteriores.
+
+## Otros archivos
+
+- `estilos.css`: estilos propios del portfolio (se cargan después de Bootstrap).
 - `imagenes/`: imágenes ilustrativas.
 
 ## Validaciones
