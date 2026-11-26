@@ -1,120 +1,178 @@
-// Los datos existentes se conservan: usamos la misma clave de almacenamiento.
-const CLAVE_CLIENTES = 'portfolioLucasClientes';
-const CLAVE_SESION = 'portfolioLucasSesionAdmin';
+// usuarios.js: crear, listar, ver, editar y eliminar usuarios en esta misma página.
+// Los datos se leen y se guardan con las funciones de bbdd.js.
 
-function leerClientes() {
-    const guardados = localStorage.getItem(CLAVE_CLIENTES);
-    const clientes = guardados === null ? [] : JSON.parse(guardados);
-    if (!Array.isArray(clientes)) throw new Error('La lista no es válida.');
-    return clientes;
+const formulario = document.getElementById('formulario-usuario');
+const tituloFormulario = document.getElementById('titulo-formulario');
+const mensajeFormulario = document.getElementById('mensaje-formulario');
+const tabla = document.getElementById('lista-usuarios');
+const tarjetaVer = document.getElementById('ver-usuario');
+
+// Si es null, el formulario crea un usuario. Si tiene un número, edita ese usuario.
+let idEnEdicion = null;
+
+// ---------- Lista de usuarios ----------
+
+function crearBoton(texto, color, accion) {
+    const boton = document.createElement('button');
+    boton.type = 'button';
+    boton.className = 'btn btn-sm me-1 ' + color;
+    boton.textContent = texto;
+    boton.addEventListener('click', accion);
+    return boton;
 }
-
-// No se repiten los IDs, incluso si hay usuarios guardados desde antes.
-function siguienteId(clientes) {
-    return clientes.reduce(function (mayor, cliente, indice) {
-        const numero = Number(cliente.id);
-        return Math.max(mayor, Number.isSafeInteger(numero) && numero > 0 ? numero : indice + 1);
-    }, 0) + 1;
-}
-
-const registro = document.getElementById('formulario-registro');
-const lista = document.getElementById('lista-clientes');
 
 function mostrarUsuarios() {
-    if (!lista) return;
-    const estado = document.getElementById('estado-clientes');
-    try {
-        const clientes = leerClientes();
-        lista.replaceChildren();
-        estado.textContent = clientes.length ? 'Total de usuarios: ' + clientes.length : 'Todavía no hay usuarios registrados.';
-        clientes.forEach(function (cliente, indice) {
-            const fila = document.createElement('tr');
-            const campos = [cliente.id ?? indice + 1, cliente.nombre, cliente.apellido, cliente.dni, cliente.mail];
-            campos.forEach(function (valor) {
-                const celda = document.createElement('td');
-                celda.textContent = String(valor ?? '');
-                fila.appendChild(celda);
-            });
-            lista.appendChild(fila);
+    const usuarios = obtenerUsuarios();
+    const encontrados = usuarios.filter(coincideBusqueda); // coincideBusqueda está en buscar_usuario.js
+
+    tabla.innerHTML = '';
+
+    encontrados.forEach(function (usuario) {
+        const fila = document.createElement('tr');
+
+        // Una celda por cada dato del usuario.
+        [usuario.id, usuario.nombre, usuario.apellido, usuario.dni, usuario.mail].forEach(function (dato) {
+            const celda = document.createElement('td');
+            celda.textContent = dato;
+            fila.appendChild(celda);
         });
-    } catch (error) {
-        estado.textContent = 'No se pudo cargar la lista de usuarios.';
+
+        // Última celda: los botones de acciones.
+        const acciones = document.createElement('td');
+        acciones.className = 'text-nowrap';
+        acciones.append(
+            crearBoton('Ver', 'btn-outline-secondary', () => mostrarDetalle(usuario.id)),
+            crearBoton('Editar', 'btn-outline-primary', () => cargarParaEditar(usuario.id)),
+            crearBoton('Eliminar', 'btn-outline-danger', () => borrarUsuario(usuario.id))
+        );
+        fila.appendChild(acciones);
+
+        tabla.appendChild(fila);
+    });
+
+    // Cantidad de usuarios y aviso cuando la tabla queda vacía.
+    document.getElementById('cantidad-usuarios').textContent = usuarios.length;
+
+    let aviso = '';
+    if (usuarios.length === 0) {
+        aviso = 'Todavía no hay usuarios registrados.';
+    } else if (encontrados.length === 0) {
+        aviso = 'No se encontraron usuarios con esos datos.';
     }
+    document.getElementById('mensaje-busqueda').textContent = aviso;
 }
 
-function actualizarIdVisible() {
-    if (!registro || !registro.elements.id) return;
-    try { registro.elements.id.value = siguienteId(leerClientes()); }
-    catch (error) { registro.elements.id.value = ''; }
+// ---------- Formulario: crear y editar ----------
+
+function mostrarMensaje(texto, esError) {
+    mensajeFormulario.textContent = texto;
+    mensajeFormulario.className = esError ? 'text-danger mt-3 mb-0' : 'text-success mt-3 mb-0';
 }
 
-if (registro) {
-    const estado = document.getElementById('estado-registro');
-    actualizarIdVisible();
-    registro.addEventListener('submit', function (evento) {
-        evento.preventDefault();
-        const cliente = {
-            nombre: registro.elements.nombre.value.trim(),
-            apellido: registro.elements.apellido.value.trim(),
-            dni: registro.elements.dni.value.trim(),
-            mail: registro.elements.mail.value.trim().toLowerCase()
-        };
-        if (!cliente.nombre || !cliente.apellido || !/^[0-9]{7,8}$/.test(cliente.dni) || !registro.elements.mail.validity.valid) {
-            estado.textContent = 'Revisá nombre, apellido, DNI y email.';
-            return;
-        }
-        try {
-            const clientes = leerClientes();
-            const repetido = clientes.some(function (guardado) {
-                return guardado.dni === cliente.dni || String(guardado.mail).toLowerCase() === cliente.mail;
-            });
-            if (repetido) {
-                estado.textContent = 'Ya existe un usuario con ese DNI o email.';
-                return;
-            }
-            cliente.id = siguienteId(clientes);
-            clientes.push(cliente);
-            localStorage.setItem(CLAVE_CLIENTES, JSON.stringify(clientes));
-            registro.reset();
-            estado.textContent = 'Usuario #' + cliente.id + ' creado correctamente.';
-            actualizarIdVisible();
-            mostrarUsuarios();
-        } catch (error) {
-            estado.textContent = 'No se pudo guardar el usuario. Revisá el almacenamiento del navegador.';
-        }
-    });
-    registro.addEventListener('reset', function () {
-        estado.textContent = '';
-        setTimeout(actualizarIdVisible, 0);
-    });
+// Deja el formulario vacío y listo para crear un usuario nuevo.
+function prepararAlta() {
+    idEnEdicion = null;
+    formulario.reset();
+    document.getElementById('id-usuario').value = nuevoId();
+    tituloFormulario.textContent = 'Crear usuario';
+    mensajeFormulario.textContent = '';
 }
 
-mostrarUsuarios();
+// Carga los datos de un usuario en el formulario para modificarlos.
+function cargarParaEditar(id) {
+    const usuario = verUsuario(id);
+    idEnEdicion = usuario.id;
 
-// Compatibilidad con el login y el panel originales, por si se conservan.
-const login = document.getElementById('formulario-login');
-if (login) {
-    login.addEventListener('submit', function (evento) {
-        evento.preventDefault();
-        const estado = document.getElementById('estado-login');
-        if (login.elements.username.value.trim() !== 'admin' || login.elements.password.value !== '1234') {
-            estado.textContent = 'Usuario o contraseña incorrectos.';
-            return;
-        }
-        localStorage.setItem(CLAVE_SESION, 'true');
-        window.location.href = 'admin.html';
-    });
+    document.getElementById('id-usuario').value = usuario.id;
+    document.getElementById('nombre').value = usuario.nombre;
+    document.getElementById('apellido').value = usuario.apellido;
+    document.getElementById('dni').value = usuario.dni;
+    document.getElementById('mail').value = usuario.mail;
+
+    tituloFormulario.textContent = 'Editar usuario #' + usuario.id;
+    mensajeFormulario.textContent = '';
+    tarjetaVer.hidden = true;
+    formulario.scrollIntoView({ behavior: 'smooth' });
 }
-const panel = document.getElementById('panel-admin');
-if (panel) {
-    if (localStorage.getItem(CLAVE_SESION) !== 'true') {
-        window.location.replace('login.html');
+
+formulario.addEventListener('submit', function (evento) {
+    evento.preventDefault(); // Evita que la página se recargue.
+
+    const nombre = document.getElementById('nombre').value.trim();
+    const apellido = document.getElementById('apellido').value.trim();
+    const dni = document.getElementById('dni').value.trim();
+    const mail = document.getElementById('mail').value.trim().toLowerCase();
+
+    // Validaciones
+    if (!nombre || !apellido) {
+        mostrarMensaje('Completá el nombre y el apellido.', true);
+        return;
+    }
+    if (!/^[0-9]{7,8}$/.test(dni)) {
+        mostrarMensaje('El DNI tiene que tener 7 u 8 números, sin puntos.', true);
+        return;
+    }
+    if (existeDniOMail(dni, mail, idEnEdicion)) {
+        mostrarMensaje('Ya existe un usuario con ese DNI o email.', true);
+        return;
+    }
+
+    // Guardar: si no hay ID en edición se crea; si hay, se edita.
+    let texto;
+    if (idEnEdicion === null) {
+        const nuevo = guardarUsuario(nombre, apellido, dni, mail);
+        texto = 'Usuario #' + nuevo.id + ' creado correctamente.';
     } else {
-        panel.hidden = false;
-        mostrarUsuarios();
+        editarUsuario(idEnEdicion, nombre, apellido, dni, mail);
+        texto = 'Usuario #' + idEnEdicion + ' actualizado correctamente.';
     }
-    document.getElementById('cerrar-sesion').addEventListener('click', function () {
-        localStorage.removeItem(CLAVE_SESION);
-        window.location.replace('login.html');
-    });
+
+    prepararAlta();
+    mostrarMensaje(texto, false);
+    mostrarUsuarios();
+});
+
+document.getElementById('cancelar').addEventListener('click', prepararAlta);
+
+// ---------- Ver usuario ----------
+
+function mostrarDetalle(id) {
+    const usuario = verUsuario(id);
+
+    document.getElementById('ver-id').textContent = usuario.id;
+    document.getElementById('ver-nombre').textContent = usuario.nombre;
+    document.getElementById('ver-apellido').textContent = usuario.apellido;
+    document.getElementById('ver-dni').textContent = usuario.dni;
+    document.getElementById('ver-mail').textContent = usuario.mail;
+
+    tarjetaVer.hidden = false;
+    tarjetaVer.scrollIntoView({ behavior: 'smooth' });
 }
+
+document.getElementById('cerrar-detalle').addEventListener('click', function () {
+    tarjetaVer.hidden = true;
+});
+
+// ---------- Eliminar usuario ----------
+
+function borrarUsuario(id) {
+    const usuario = verUsuario(id);
+    const confirmado = confirm(`¿Seguro que querés eliminar a ${usuario.nombre} ${usuario.apellido} (DNI ${usuario.dni})?`);
+    if (!confirmado) return;
+
+    eliminarUsuario(id);
+    tarjetaVer.hidden = true;
+
+    // Si se estaba editando ese usuario, el formulario vuelve a "Crear usuario".
+    if (idEnEdicion === id) {
+        prepararAlta();
+    } else if (idEnEdicion === null) {
+        document.getElementById('id-usuario').value = nuevoId();
+    }
+
+    mostrarUsuarios();
+}
+
+// ---------- Al abrir la página ----------
+prepararAlta();
+mostrarUsuarios();
