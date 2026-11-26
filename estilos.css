@@ -390,3 +390,29 @@ main > section {
         grid-template-columns: 1fr;
     }
 }
+
+/* Botón "Cerrar sesión" alineado con los enlaces del menú */
+nav {
+    align-items: center;
+}
+
+/* Bienvenida con el usuario de la sesión */
+.bienvenida {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    padding: 16px 20px;
+    border: 1px solid #e4e4e7;
+    border-radius: 6px;
+    background-color: #ffffff;
+}
+
+.bienvenida p {
+    margin: 0;
+}
+
+/* El encabezado también es un punto de parada, así se puede volver arriba de todo */
+header {
+    scroll-snap-align: start;
+}

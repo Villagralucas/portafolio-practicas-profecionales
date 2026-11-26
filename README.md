@@ -1,51 +1,56 @@
 # Portfolio personal — Prácticas Profesionalizantes
 
-Página hecha con HTML, CSS y JavaScript. La página de usuarios usa Bootstrap 5 para los estilos y los modales.
+Página hecha con HTML, CSS y JavaScript, con Bootstrap 5 para los estilos y los modales.
 
 ## Cómo abrirlo
 
-Abrí la carpeta en Visual Studio Code, hacé clic derecho en `index.html` y elegí
+Abrí la carpeta en Visual Studio Code, hacé clic derecho en `login.html` y elegí
 **Open with Live Server**. Los datos se guardan en el `localStorage` del
 navegador, así que conviene usar siempre la misma dirección y el mismo navegador.
 Bootstrap se carga desde internet, así que hace falta conexión.
 
-## Páginas
-
-- `index.html`: presentación, acerca de mí, proyectos en acordeón y formulario de contacto.
-- `usuarios.html`: todo el manejo de usuarios en una sola página (ver abajo).
-- `proyectos/harro/`: página de la hamburguesería Harro Burger House.
-
-## Usuarios (`usuarios.html`)
-
-En una misma página está todo lo del Taller de HTML & CSS:
-
-| En el taller | En esta página |
-|---|---|
-| `login.html` | Tarjeta "Iniciar sesión" |
-| `index.html` (home) | "Bienvenido, usuario", fecha de ingreso y "Cerrar sesión" |
-| `form_usuario.html` | Botón "+ Agregar usuario", que abre un modal con el formulario |
-| `editar_usuario.html` | El mismo modal, con los datos cargados, al tocar "Editar" |
-| `ver_usuario.html` | Modal "Datos del usuario", al tocar "Ver" |
-| `lista_usuarios.html` | Tabla "Lista de usuarios" a todo el ancho, con cantidad de registrados |
-| Eliminar (en `bbdd.js`) | Botón "Eliminar", con confirmación |
-| `buscar_usuario.js` | Buscador arriba de la tabla |
-
 Usuarios de prueba: `admin` / `1234` y `usuario` / `pass123`.
 
-### Archivos JavaScript
+## Páginas
 
-Se cargan en este orden, porque cada uno usa funciones de los anteriores:
+- `login.html`: inicio de sesión. Al entrar, lleva a `index.html`.
+- `index.html`: el portfolio. Si no hay sesión iniciada, vuelve al login.
+- `proyectos/harro/`: página de la hamburguesería Harro Burger House.
 
-1. `bbdd.js`: guarda y lee los usuarios en el `localStorage` (obtener, guardar, editar, ver y eliminar).
-2. `login.js`: revisa usuario y contraseña y guarda la sesión.
-3. `home.js`: muestra el login o el panel según haya sesión, y cierra la sesión.
-4. `buscar_usuario.js`: filtra la tabla mientras se escribe.
-5. `usuarios.js`: dibuja la tabla, abre los modales de agregar, editar y ver, y elimina usuarios.
+## Qué tiene `index.html`
+
+Sigue el `index.html` del Taller de HTML & CSS, todo en la misma página:
+
+| Sección | Qué hace |
+|---|---|
+| Menú | Enlaces a cada sección y botón "Cerrar sesión" |
+| Bienvenida | "Bienvenido, usuario!" y último ingreso |
+| Inicio | Presentación |
+| Administrar usuarios | Cantidad de usuarios y botón "+ Agregar usuario" (abre un modal) |
+| Ver usuarios | Buscador y tabla con botones Ver, Editar y Eliminar |
+| Acerca de mí | Presentación personal |
+| Mis proyectos | Proyectos en acordeón |
+| Contacto | Formulario de consultas |
+
+En el taller, `form_usuario.html`, `editar_usuario.html`, `ver_usuario.html` y
+`lista_usuarios.html` son páginas separadas. Acá están integradas en el index:
+agregar y editar usan el mismo modal, y "Ver" abre otro modal con los datos.
+
+## Archivos JavaScript
+
+- `login.js`: revisa usuario y contraseña, guarda la sesión y pasa al index.
+- `home.js`: si no hay sesión vuelve al login, muestra la bienvenida y cierra la sesión.
+- `bbdd.js`: guarda y lee los usuarios en el `localStorage` (obtener, guardar, editar, ver y eliminar).
+- `buscar_usuario.js`: filtra la tabla mientras se escribe.
+- `usuarios.js`: dibuja la tabla, abre los modales de agregar, editar y ver, y elimina usuarios.
+- `contacto.js`: guarda las consultas del formulario de contacto.
+
+En `index.html` se cargan en ese orden (después del JavaScript de Bootstrap),
+porque cada uno usa funciones de los anteriores.
 
 ## Otros archivos
 
-- `estilos.css`: estilos del portfolio (`index.html`).
-- `contacto.js`: guarda las consultas del formulario de contacto.
+- `estilos.css`: estilos propios del portfolio (se cargan después de Bootstrap).
 - `imagenes/`: imágenes ilustrativas.
 
 ## Validaciones

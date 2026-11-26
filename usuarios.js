@@ -1,10 +1,10 @@
-// usuarios.js: listar, agregar, ver, editar y eliminar usuarios en esta misma página.
+// usuarios.js: listar, agregar, ver, editar y eliminar usuarios (secciones Administrar y Ver usuarios del index).
 // Los datos se leen y se guardan con las funciones de bbdd.js.
 // Los formularios se abren en ventanas modales de Bootstrap.
 
 const tabla = document.getElementById('lista-usuarios');
 const mensajeLista = document.getElementById('mensaje-lista');
-const formulario = document.getElementById('formulario-usuario');
+const formularioUsuario = document.getElementById('formulario-usuario');
 const tituloFormulario = document.getElementById('titulo-formulario');
 const mensajeFormulario = document.getElementById('mensaje-formulario');
 
@@ -72,7 +72,7 @@ function mostrarUsuarios() {
 // Abre el modal vacío para agregar un usuario nuevo.
 function abrirAlta() {
     idEnEdicion = null;
-    formulario.reset();
+    formularioUsuario.reset();
     document.getElementById('id-usuario').value = nuevoId();
     tituloFormulario.textContent = 'Agregar usuario';
     mensajeFormulario.textContent = '';
@@ -85,23 +85,23 @@ function abrirEdicion(id) {
     idEnEdicion = usuario.id;
 
     document.getElementById('id-usuario').value = usuario.id;
-    document.getElementById('nombre').value = usuario.nombre;
-    document.getElementById('apellido').value = usuario.apellido;
-    document.getElementById('dni').value = usuario.dni;
-    document.getElementById('mail').value = usuario.mail;
+    document.getElementById('form-nombre').value = usuario.nombre;
+    document.getElementById('form-apellido').value = usuario.apellido;
+    document.getElementById('form-dni').value = usuario.dni;
+    document.getElementById('form-mail').value = usuario.mail;
 
     tituloFormulario.textContent = 'Editar usuario #' + usuario.id;
     mensajeFormulario.textContent = '';
     modalUsuario.show();
 }
 
-formulario.addEventListener('submit', function (evento) {
+formularioUsuario.addEventListener('submit', function (evento) {
     evento.preventDefault(); // Evita que la página se recargue.
 
-    const nombre = document.getElementById('nombre').value.trim();
-    const apellido = document.getElementById('apellido').value.trim();
-    const dni = document.getElementById('dni').value.trim();
-    const mail = document.getElementById('mail').value.trim().toLowerCase();
+    const nombre = document.getElementById('form-nombre').value.trim();
+    const apellido = document.getElementById('form-apellido').value.trim();
+    const dni = document.getElementById('form-dni').value.trim();
+    const mail = document.getElementById('form-mail').value.trim().toLowerCase();
 
     // Validaciones: si algo está mal, se avisa dentro del modal.
     if (!nombre || !apellido) {
@@ -134,7 +134,7 @@ document.getElementById('boton-agregar').addEventListener('click', abrirAlta);
 
 // Cuando el modal termina de abrirse, el cursor va al campo Nombre.
 document.getElementById('modal-usuario').addEventListener('shown.bs.modal', function () {
-    document.getElementById('nombre').focus();
+    document.getElementById('form-nombre').focus();
 });
 
 // ---------- Ver usuario (modal de solo lectura) ----------

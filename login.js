@@ -4,12 +4,14 @@ const USUARIOS_PRUEBA = {
     usuario: 'pass123'
 };
 
-// Claves donde se guarda la sesión en el localStorage.
+// Claves donde se guarda la sesión en el localStorage (home.js usa las mismas).
 const CLAVES_SESION = {
     SESION: 'portfolioLucasSesionAdmin',
     USUARIO: 'portfolioLucasUsuarioActual',
     FECHA: 'portfolioLucasFechaIngreso'
 };
+
+const HOME_URL = 'index.html';
 
 const formularioLogin = document.getElementById('formulario-login');
 const mensajeLogin = document.getElementById('mensaje-login');
@@ -26,12 +28,10 @@ formularioLogin.addEventListener('submit', function (evento) {
         return;
     }
 
-    // Se guarda la sesión y la fecha de ingreso.
+    // Se guarda la sesión y la fecha de ingreso, y se pasa al portfolio.
     localStorage.setItem(CLAVES_SESION.SESION, 'true');
     localStorage.setItem(CLAVES_SESION.USUARIO, usuario);
     localStorage.setItem(CLAVES_SESION.FECHA, new Date().toLocaleString('es-AR'));
 
-    formularioLogin.reset();
-    mensajeLogin.textContent = '';
-    verificarSesion(); // Está en home.js: oculta el login y muestra el panel.
+    window.location.href = HOME_URL;
 });
