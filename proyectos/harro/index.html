@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harro Burger House - Registro de clientes</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <header>
+        <p class="subtitulo">HAMBURGUESAS ARTESANALES</p>
+        <h1>HARRO BURGER HOUSE</h1>
+        <p class="frase">Buenas hamburguesas, buenos momentos.</p>
+    </header>
+
+    <main>
+        <!-- Formulario de registro -->
+        <section>
+            <h2 class="titulo-registro">Registro de clientes</h2>
+            <p class="descripcion">Completá tus datos para formar parte de nuestra comunidad.</p>
+
+            <form>
+                <div class="campo">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ingresá tu nombre" autocomplete="given-name" required>
+                </div>
+
+                <div class="campo">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" id="apellido" name="apellido" placeholder="Ingresá tu apellido" autocomplete="family-name" required>
+                </div>
+
+                <div class="campo">
+                    <label for="dni">DNI</label>
+                    <input type="text" id="dni" name="dni" placeholder="Sin puntos ni espacios" inputmode="numeric" pattern="[0-9]{7,8}" maxlength="8" title="Ingresá 7 u 8 números, sin puntos ni espacios" required>
+                </div>
+
+                <div class="campo">
+                    <label for="mail">Mail</label>
+                    <input type="email" id="mail" name="mail" placeholder="nombre@ejemplo.com" autocomplete="email" required>
+                </div>
+
+               
+                <button type="button">Registrar cliente</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Lista de clientes</h2>
+            <p class="descripcion">Datos de ejemplo para mostrar cómo se visualizarán los clientes.</p>
+
+            <div class="contenedor-tabla">
+                <table>
+                    <caption>Clientes de ejemplo</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Apellido</th>
+                            <th scope="col">DNI</th>
+                            <th scope="col">Mail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Lucía</td>
+                            <td>Pérez</td>
+                            <td>40111222</td>
+                            <td>lucia@example.com</td>
+                        </tr>
+                        <tr>
+                            <td>Martín</td>
+                            <td>Gómez</td>
+                            <td>42333444</td>
+                            <td>martin@example.com</td>
+                        </tr>
+                        <tr>
+                            <td>Orlando</td>
+                            <td>Gil</td>
+                            <td>423331122</td>
+                            <td>morlandon@example.com</td>
+                        </tr>
+                        <tr>
+                            <td>Marcos</td>
+                            <td>Mas</td>
+                            <td>42363445</td>
+                            <td>marcos@example.com</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Harro Burger House</p>
+    </footer>
+</body>
+</html>

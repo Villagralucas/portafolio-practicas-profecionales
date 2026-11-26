@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de clientes - Lucas</title>
+    <link rel="stylesheet" href="estilos.css?v=3">
+    <script src="usuarios.js" defer></script>
+</head>
+<body>
+    <header>
+        <nav aria-label="Menú principal">
+            <a href="index.html">Volver al portfolio</a>
+            <a href="registro.html" aria-current="page">Registrarse</a>
+            <a href="login.html">Administración</a>
+        </nav>
+    </header>
+    <main class="pagina-usuarios">
+        <section class="tarjeta-usuarios">
+            <h1>Registro de clientes</h1>
+            <p>Completá tus datos para registrarte.</p>
+            <form id="formulario-registro">
+                <div class="campo">
+                    <label for="nombre">Nombre</label>
+                    <input id="nombre" name="nombre" type="text" autocomplete="given-name" required>
+                </div>
+                <div class="campo">
+                    <label for="apellido">Apellido</label>
+                    <input id="apellido" name="apellido" type="text" autocomplete="family-name" required>
+                </div>
+                <div class="campo">
+                    <label for="dni">DNI</label>
+                    <input id="dni" name="dni" type="text" inputmode="numeric" pattern="[0-9]{7,8}" maxlength="8" title="Ingresá 7 u 8 números, sin puntos ni espacios" required>
+                </div>
+                <div class="campo">
+                    <label for="mail">Mail</label>
+                    <input id="mail" name="mail" type="email" autocomplete="email" required>
+                </div>
+                <div class="acciones">
+                    <button type="submit">Registrarme</button>
+                    <button type="reset" class="secundario">Cancelar</button>
+                </div>
+                <p id="estado-registro" role="status"></p>
+            </form>
+            <p class="aviso">Práctica escolar: usá datos ficticios. Se guardan solo en este navegador.</p>
+        </section>
+    </main>
+</body>
+</html>

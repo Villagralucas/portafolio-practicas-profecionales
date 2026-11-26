@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucas - Portfolio personal</title>
+    <link rel="stylesheet" href="estilos.css?v=4">
+</head>
+<body>
+    <header>
+        <nav aria-label="Menú principal">
+            <a href="#inicio">Inicio</a>
+            <a href="#acerca-de-mi">Acerca de mí</a>
+            <a href="#mis-proyectos">Mis proyectos</a>
+            <a href="#contacto">Contacto</a>
+            <a href="usuarios.html">Usuarios</a>
+        </nav>
+    </header>
+    <main>
+        <section id="inicio">
+            <p class="detalle">MI PORTFOLIO PERSONAL</p>
+            <h1>Hola, soy Lucas.</h1>
+            <p>Bienvenido a mi página. Acá comparto mi presentación y los trabajos que voy realizando.</p>
+            <a class="boton" href="#mis-proyectos">Ver mis proyectos</a>
+        </section>
+        <section id="acerca-de-mi">
+            <h2>Acerca de mí</h2>
+            <div class="presentacion">
+                <div>
+                    <p>Soy Lucas, estudiante y desarrollador en formación.</p>
+                    <p>Me interesa crear sistemas y páginas web que ayuden a resolver necesidades cotidianas. En este espacio comparto mis proyectos y lo que voy aprendiendo.</p>
+                </div>
+                <div><img class="imagen-presentacion" src="imagenes/desarrollo.png" alt="Escritorio de desarrollo con una computadora y código en pantalla"></div>
+            </div>
+        </section>
+        <section id="mis-proyectos">
+            <h2>Mis proyectos</h2>
+            <div class="proyectos">
+                <details class="proyecto" name="proyectos">
+                    <summary>Proyecto 1 — Harro Burger House</summary>
+                    <div class="contenido-proyecto">
+                        <img class="imagen-proyecto" src="proyectos/harro/hamburguesas.png" alt="Hamburguesas de bacon y cheddar y de verduras de Harro Burger House">
+                        <p>Página de una hamburguesería con un formulario de registro de clientes y una tabla para visualizar sus datos.</p>
+                        <p>Realizada con HTML5 y una hoja de estilos CSS separada.</p>
+                    </div>
+                </details>
+                <details class="proyecto" name="proyectos">
+                    <summary>Proyecto 2 — Balance</summary>
+                    <div class="contenido-proyecto">
+                        <img class="imagen-proyecto" src="imagenes/balance.png" alt="Maqueta de un edificio junto a una billetera sobre un escritorio">
+                        <p>Gestor de finanzas personales para registrar ingresos y gastos, organizar el presupuesto mensual y seguir objetivos de ahorro.</p>
+                        <p>Incluye filtros de movimientos y gráficos para visualizar los gastos por categoría y la evolución de las finanzas.</p>
+                        <p>Desarrollado con Next.js y Supabase.</p>
+                        <p class="aviso">Proyecto local. Enlace de la aplicación pendiente de publicación.</p>
+                    </div>
+                </details>
+            </div>
+        </section>
+        <section id="contacto">
+            <h2>Contacto</h2>
+            <p>Completá el formulario para dejar tu consulta.</p>
+            <p class="aviso">Las consultas se guardan en este navegador. No se envían por mail.</p>
+            <form id="formulario-contacto">
+                <div class="campo"><label for="nombre">Nombre</label><input type="text" id="nombre" name="nombre" autocomplete="given-name" required></div>
+                <div class="campo"><label for="apellido">Apellido</label><input type="text" id="apellido" name="apellido" autocomplete="family-name" required></div>
+                <div class="campo"><label for="mail">Mail</label><input type="email" id="mail" name="mail" autocomplete="email" placeholder="nombre@ejemplo.com" required></div>
+                <div class="campo"><label for="telefono">Teléfono</label><input type="tel" id="telefono" name="telefono" autocomplete="tel" placeholder="Ej.: 11 1234 5678" required></div>
+                <div class="campo"><label for="mensaje">Mensaje</label><textarea id="mensaje" name="mensaje" rows="5" required></textarea></div>
+                <div class="acciones"><button type="submit">Enviar</button><button type="reset" class="secundario">Cancelar</button></div>
+                <p id="estado-consulta" role="status"></p>
+            </form>
+        </section>
+    </main>
+    <footer><p>Lucas · Portfolio personal</p><a href="#inicio">Volver al inicio</a></footer>
+    <script src="contacto.js"></script>
+</body>
+</html>
