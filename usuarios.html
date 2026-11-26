@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuarios - Portfolio de Lucas</title>
-    <!-- Bootstrap: estilos listos para formularios, tablas, botones y tarjetas -->
+    <!-- Bootstrap: estilos listos para formularios, tablas, botones, tarjetas y modales -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
 <body class="bg-light">
@@ -54,95 +54,41 @@
                 <button type="button" id="cerrar-sesion" class="btn btn-outline-dark">Cerrar sesión</button>
             </div>
 
-            <div class="row g-4">
+            <!-- Lista de usuarios -->
+            <section class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                        <h2 class="h5 mb-0">
+                            Lista de usuarios
+                            <span class="badge text-bg-dark align-middle ms-1">Registrados: <span id="cantidad-usuarios">0</span></span>
+                        </h2>
+                        <button type="button" id="boton-agregar" class="btn btn-dark">+ Agregar usuario</button>
+                    </div>
 
-                <!-- Columna izquierda: formulario y detalle -->
-                <div class="col-xl-4">
+                    <label for="buscar-usuario" class="form-label">Buscar usuario</label>
+                    <input type="search" id="buscar-usuario" class="form-control mb-3" placeholder="Nombre, apellido, DNI o email">
 
-                    <!-- Crear / editar usuario -->
-                    <section class="card shadow-sm">
-                        <div class="card-body p-4">
-                            <h2 id="titulo-formulario" class="h5 mb-3">Crear usuario</h2>
-                            <form id="formulario-usuario">
-                                <div class="mb-3">
-                                    <label for="id-usuario" class="form-label">ID de usuario</label>
-                                    <input type="text" id="id-usuario" class="form-control" readonly>
-                                    <div class="form-text">Se genera automáticamente.</div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="nombre" class="form-label">Nombre</label>
-                                    <input type="text" id="nombre" class="form-control" autocomplete="given-name" maxlength="80" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="apellido" class="form-label">Apellido</label>
-                                    <input type="text" id="apellido" class="form-control" autocomplete="family-name" maxlength="80" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="dni" class="form-label">DNI</label>
-                                    <input type="text" id="dni" class="form-control" inputmode="numeric" pattern="[0-9]{7,8}" maxlength="8" title="Ingresá 7 u 8 números, sin puntos" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="mail" class="form-label">Email</label>
-                                    <input type="email" id="mail" class="form-control" autocomplete="email" maxlength="254" required>
-                                </div>
-                                <div class="d-flex gap-2">
-                                    <button type="submit" class="btn btn-dark">Guardar</button>
-                                    <button type="button" id="cancelar" class="btn btn-outline-secondary">Cancelar</button>
-                                </div>
-                                <p id="mensaje-formulario" class="mt-3 mb-0" role="status"></p>
-                            </form>
-                        </div>
-                    </section>
+                    <p id="mensaje-lista" class="text-success" role="status"></p>
 
-                    <!-- Ver usuario (aparece al tocar "Ver") -->
-                    <section id="ver-usuario" class="card shadow-sm mt-4" hidden>
-                        <div class="card-body p-4">
-                            <h2 class="h5 mb-3">Datos del usuario</h2>
-                            <dl class="row mb-3">
-                                <dt class="col-4">ID</dt>       <dd class="col-8" id="ver-id"></dd>
-                                <dt class="col-4">Nombre</dt>   <dd class="col-8" id="ver-nombre"></dd>
-                                <dt class="col-4">Apellido</dt> <dd class="col-8" id="ver-apellido"></dd>
-                                <dt class="col-4">DNI</dt>      <dd class="col-8" id="ver-dni"></dd>
-                                <dt class="col-4">Email</dt>    <dd class="col-8 text-break" id="ver-mail"></dd>
-                            </dl>
-                            <button type="button" id="cerrar-detalle" class="btn btn-outline-secondary btn-sm">Cerrar</button>
-                        </div>
-                    </section>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Apellido</th>
+                                    <th scope="col">DNI</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-usuarios"></tbody>
+                        </table>
+                    </div>
+                    <p id="mensaje-busqueda" class="text-muted mt-3 mb-0" role="status"></p>
                 </div>
-
-                <!-- Columna derecha: buscador y lista -->
-                <div class="col-xl-8">
-                    <section class="card shadow-sm">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h2 class="h5 mb-0">Lista de usuarios</h2>
-                                <span class="badge text-bg-dark">Registrados: <span id="cantidad-usuarios">0</span></span>
-                            </div>
-
-                            <label for="buscar-usuario" class="form-label">Buscar usuario</label>
-                            <input type="search" id="buscar-usuario" class="form-control mb-3" placeholder="Nombre, apellido, DNI o email">
-
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Nombre</th>
-                                            <th scope="col">Apellido</th>
-                                            <th scope="col">DNI</th>
-                                            <th scope="col">Email</th>
-                                            <th scope="col">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="lista-usuarios"></tbody>
-                                </table>
-                            </div>
-                            <p id="mensaje-busqueda" class="text-muted mt-3 mb-0" role="status"></p>
-                        </div>
-                    </section>
-                    <p class="small text-muted mt-3">Práctica escolar: usá datos ficticios. Se guardan solo en este navegador.</p>
-                </div>
-            </div>
+            </section>
+            <p class="small text-muted mt-3">Práctica escolar: usá datos ficticios. Se guardan solo en este navegador.</p>
         </div>
     </main>
 
@@ -150,6 +96,73 @@
         <p class="mb-1">Lucas · Portfolio personal</p>
         <a href="index.html#inicio" class="link-secondary">Volver al inicio</a>
     </footer>
+
+    <!-- Modal: agregar o editar usuario (se usa el mismo formulario para las dos cosas) -->
+    <div class="modal fade" id="modal-usuario" tabindex="-1" aria-labelledby="titulo-formulario" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="formulario-usuario" class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="titulo-formulario">Agregar usuario</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="id-usuario" class="form-label">ID de usuario</label>
+                        <input type="text" id="id-usuario" class="form-control" readonly>
+                        <div class="form-text">Se genera automáticamente.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" id="nombre" class="form-control" autocomplete="given-name" maxlength="80" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="apellido" class="form-label">Apellido</label>
+                        <input type="text" id="apellido" class="form-control" autocomplete="family-name" maxlength="80" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dni" class="form-label">DNI</label>
+                        <input type="text" id="dni" class="form-control" inputmode="numeric" pattern="[0-9]{7,8}" maxlength="8" title="Ingresá 7 u 8 números, sin puntos" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mail" class="form-label">Email</label>
+                        <input type="email" id="mail" class="form-control" autocomplete="email" maxlength="254" required>
+                    </div>
+                    <p id="mensaje-formulario" class="text-danger mb-0" role="alert"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-dark">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: ver los datos de un usuario -->
+    <div class="modal fade" id="modal-ver" tabindex="-1" aria-labelledby="titulo-ver" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="titulo-ver">Datos del usuario</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <dl class="row mb-0">
+                        <dt class="col-4">ID</dt>       <dd class="col-8" id="ver-id"></dd>
+                        <dt class="col-4">Nombre</dt>   <dd class="col-8" id="ver-nombre"></dd>
+                        <dt class="col-4">Apellido</dt> <dd class="col-8" id="ver-apellido"></dd>
+                        <dt class="col-4">DNI</dt>      <dd class="col-8" id="ver-dni"></dd>
+                        <dt class="col-4">Email</dt>    <dd class="col-8 text-break mb-0" id="ver-mail"></dd>
+                    </dl>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript de Bootstrap: hace funcionar los modales -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- El orden importa: cada archivo usa funciones de los anteriores. -->
     <script src="bbdd.js"></script>

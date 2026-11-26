@@ -1,13 +1,18 @@
-// usuarios.js: crear, listar, ver, editar y eliminar usuarios en esta misma página.
+// usuarios.js: listar, agregar, ver, editar y eliminar usuarios en esta misma página.
 // Los datos se leen y se guardan con las funciones de bbdd.js.
+// Los formularios se abren en ventanas modales de Bootstrap.
 
+const tabla = document.getElementById('lista-usuarios');
+const mensajeLista = document.getElementById('mensaje-lista');
 const formulario = document.getElementById('formulario-usuario');
 const tituloFormulario = document.getElementById('titulo-formulario');
 const mensajeFormulario = document.getElementById('mensaje-formulario');
-const tabla = document.getElementById('lista-usuarios');
-const tarjetaVer = document.getElementById('ver-usuario');
 
-// Si es null, el formulario crea un usuario. Si tiene un número, edita ese usuario.
+// Ventanas modales de Bootstrap (se abren con .show() y se cierran con .hide()).
+const modalUsuario = new bootstrap.Modal(document.getElementById('modal-usuario'));
+const modalVer = new bootstrap.Modal(document.getElementById('modal-ver'));
+
+// Si es null, el formulario agrega un usuario. Si tiene un número, edita ese usuario.
 let idEnEdicion = null;
 
 // ---------- Lista de usuarios ----------
@@ -42,7 +47,7 @@ function mostrarUsuarios() {
         acciones.className = 'text-nowrap';
         acciones.append(
             crearBoton('Ver', 'btn-outline-secondary', () => mostrarDetalle(usuario.id)),
-            crearBoton('Editar', 'btn-outline-primary', () => cargarParaEditar(usuario.id)),
+            crearBoton('Editar', 'btn-outline-primary', () => abrirEdicion(usuario.id)),
             crearBoton('Eliminar', 'btn-outline-danger', () => borrarUsuario(usuario.id))
         );
         fila.appendChild(acciones);
@@ -62,24 +67,20 @@ function mostrarUsuarios() {
     document.getElementById('mensaje-busqueda').textContent = aviso;
 }
 
-// ---------- Formulario: crear y editar ----------
+// ---------- Agregar y editar (modal con el formulario) ----------
 
-function mostrarMensaje(texto, esError) {
-    mensajeFormulario.textContent = texto;
-    mensajeFormulario.className = esError ? 'text-danger mt-3 mb-0' : 'text-success mt-3 mb-0';
-}
-
-// Deja el formulario vacío y listo para crear un usuario nuevo.
-function prepararAlta() {
+// Abre el modal vacío para agregar un usuario nuevo.
+function abrirAlta() {
     idEnEdicion = null;
     formulario.reset();
     document.getElementById('id-usuario').value = nuevoId();
-    tituloFormulario.textContent = 'Crear usuario';
+    tituloFormulario.textContent = 'Agregar usuario';
     mensajeFormulario.textContent = '';
+    modalUsuario.show();
 }
 
-// Carga los datos de un usuario en el formulario para modificarlos.
-function cargarParaEditar(id) {
+// Abre el modal con los datos de un usuario para modificarlos.
+function abrirEdicion(id) {
     const usuario = verUsuario(id);
     idEnEdicion = usuario.id;
 
@@ -91,8 +92,7 @@ function cargarParaEditar(id) {
 
     tituloFormulario.textContent = 'Editar usuario #' + usuario.id;
     mensajeFormulario.textContent = '';
-    tarjetaVer.hidden = true;
-    formulario.scrollIntoView({ behavior: 'smooth' });
+    modalUsuario.show();
 }
 
 formulario.addEventListener('submit', function (evento) {
@@ -103,38 +103,41 @@ formulario.addEventListener('submit', function (evento) {
     const dni = document.getElementById('dni').value.trim();
     const mail = document.getElementById('mail').value.trim().toLowerCase();
 
-    // Validaciones
+    // Validaciones: si algo está mal, se avisa dentro del modal.
     if (!nombre || !apellido) {
-        mostrarMensaje('Completá el nombre y el apellido.', true);
+        mensajeFormulario.textContent = 'Completá el nombre y el apellido.';
         return;
     }
     if (!/^[0-9]{7,8}$/.test(dni)) {
-        mostrarMensaje('El DNI tiene que tener 7 u 8 números, sin puntos.', true);
+        mensajeFormulario.textContent = 'El DNI tiene que tener 7 u 8 números, sin puntos.';
         return;
     }
     if (existeDniOMail(dni, mail, idEnEdicion)) {
-        mostrarMensaje('Ya existe un usuario con ese DNI o email.', true);
+        mensajeFormulario.textContent = 'Ya existe un usuario con ese DNI o email.';
         return;
     }
 
-    // Guardar: si no hay ID en edición se crea; si hay, se edita.
-    let texto;
+    // Guardar: si no hay ID en edición se agrega; si hay, se edita.
     if (idEnEdicion === null) {
         const nuevo = guardarUsuario(nombre, apellido, dni, mail);
-        texto = 'Usuario #' + nuevo.id + ' creado correctamente.';
+        mensajeLista.textContent = 'Usuario #' + nuevo.id + ' agregado correctamente.';
     } else {
         editarUsuario(idEnEdicion, nombre, apellido, dni, mail);
-        texto = 'Usuario #' + idEnEdicion + ' actualizado correctamente.';
+        mensajeLista.textContent = 'Usuario #' + idEnEdicion + ' actualizado correctamente.';
     }
 
-    prepararAlta();
-    mostrarMensaje(texto, false);
+    modalUsuario.hide();
     mostrarUsuarios();
 });
 
-document.getElementById('cancelar').addEventListener('click', prepararAlta);
+document.getElementById('boton-agregar').addEventListener('click', abrirAlta);
 
-// ---------- Ver usuario ----------
+// Cuando el modal termina de abrirse, el cursor va al campo Nombre.
+document.getElementById('modal-usuario').addEventListener('shown.bs.modal', function () {
+    document.getElementById('nombre').focus();
+});
+
+// ---------- Ver usuario (modal de solo lectura) ----------
 
 function mostrarDetalle(id) {
     const usuario = verUsuario(id);
@@ -145,13 +148,8 @@ function mostrarDetalle(id) {
     document.getElementById('ver-dni').textContent = usuario.dni;
     document.getElementById('ver-mail').textContent = usuario.mail;
 
-    tarjetaVer.hidden = false;
-    tarjetaVer.scrollIntoView({ behavior: 'smooth' });
+    modalVer.show();
 }
-
-document.getElementById('cerrar-detalle').addEventListener('click', function () {
-    tarjetaVer.hidden = true;
-});
 
 // ---------- Eliminar usuario ----------
 
@@ -161,18 +159,9 @@ function borrarUsuario(id) {
     if (!confirmado) return;
 
     eliminarUsuario(id);
-    tarjetaVer.hidden = true;
-
-    // Si se estaba editando ese usuario, el formulario vuelve a "Crear usuario".
-    if (idEnEdicion === id) {
-        prepararAlta();
-    } else if (idEnEdicion === null) {
-        document.getElementById('id-usuario').value = nuevoId();
-    }
-
+    mensajeLista.textContent = `Se eliminó a ${usuario.nombre} ${usuario.apellido}.`;
     mostrarUsuarios();
 }
 
 // ---------- Al abrir la página ----------
-prepararAlta();
 mostrarUsuarios();

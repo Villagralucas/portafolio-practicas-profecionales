@@ -1,6 +1,6 @@
 # Portfolio personal — Prácticas Profesionalizantes
 
-Página hecha con HTML, CSS y JavaScript. La página de usuarios usa Bootstrap 5 para los estilos.
+Página hecha con HTML, CSS y JavaScript. La página de usuarios usa Bootstrap 5 para los estilos y los modales.
 
 ## Cómo abrirlo
 
@@ -23,10 +23,10 @@ En una misma página está todo lo del Taller de HTML & CSS:
 |---|---|
 | `login.html` | Tarjeta "Iniciar sesión" |
 | `index.html` (home) | "Bienvenido, usuario", fecha de ingreso y "Cerrar sesión" |
-| `form_usuario.html` | Formulario "Crear usuario" |
-| `editar_usuario.html` | El mismo formulario, al tocar "Editar" en la tabla |
-| `ver_usuario.html` | Tarjeta "Datos del usuario", al tocar "Ver" |
-| `lista_usuarios.html` | Tabla "Lista de usuarios" con cantidad de registrados |
+| `form_usuario.html` | Botón "+ Agregar usuario", que abre un modal con el formulario |
+| `editar_usuario.html` | El mismo modal, con los datos cargados, al tocar "Editar" |
+| `ver_usuario.html` | Modal "Datos del usuario", al tocar "Ver" |
+| `lista_usuarios.html` | Tabla "Lista de usuarios" a todo el ancho, con cantidad de registrados |
 | Eliminar (en `bbdd.js`) | Botón "Eliminar", con confirmación |
 | `buscar_usuario.js` | Buscador arriba de la tabla |
 
@@ -40,7 +40,7 @@ Se cargan en este orden, porque cada uno usa funciones de los anteriores:
 2. `login.js`: revisa usuario y contraseña y guarda la sesión.
 3. `home.js`: muestra el login o el panel según haya sesión, y cierra la sesión.
 4. `buscar_usuario.js`: filtra la tabla mientras se escribe.
-5. `usuarios.js`: dibuja la tabla y maneja el formulario, el detalle y el botón eliminar.
+5. `usuarios.js`: dibuja la tabla, abre los modales de agregar, editar y ver, y elimina usuarios.
 
 ## Otros archivos
 
