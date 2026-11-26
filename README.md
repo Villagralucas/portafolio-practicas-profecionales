@@ -9,7 +9,7 @@ Abrí la carpeta en Visual Studio Code, hacé clic derecho en `login.html` y ele
 navegador, así que conviene usar siempre la misma dirección y el mismo navegador.
 Bootstrap se carga desde internet, así que hace falta conexión.
 
-Usuarios de prueba: `admin` / `1234` y `usuario` / `pass123`.
+Usuario de prueba: `admin` / `1234`.
 
 ## Páginas
 

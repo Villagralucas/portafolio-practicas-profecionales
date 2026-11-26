@@ -1,7 +1,6 @@
-// login.js: inicio de sesión con usuarios de prueba (es una simulación escolar).
+// login.js: inicio de sesión del administrador (es una simulación escolar).
 const USUARIOS_PRUEBA = {
-    admin: '1234',
-    usuario: 'pass123'
+    admin: '1234'
 };
 
 // Claves donde se guarda la sesión en el localStorage (home.js usa las mismas).
