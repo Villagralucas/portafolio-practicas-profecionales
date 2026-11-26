@@ -40,6 +40,7 @@ agregar y editar usan el mismo modal, y "Ver" abre otro modal con los datos.
 - `login.js`: revisa usuario y contraseña, guarda la sesión y pasa al index.
 - `home.js`: si no hay sesión vuelve al login, muestra la bienvenida y cierra la sesión.
 - `bbdd.js`: guarda y lee los usuarios en el `localStorage` (obtener, guardar, editar, ver y eliminar).
+  La primera vez que se abre la página carga 4 usuarios de ejemplo (inventados) para que la tabla no esté vacía.
 - `buscar_usuario.js`: filtra la tabla mientras se escribe.
 - `usuarios.js`: dibuja la tabla, abre los modales de agregar, editar y ver, y elimina usuarios.
 - `contacto.js`: guarda las consultas del formulario de contacto.

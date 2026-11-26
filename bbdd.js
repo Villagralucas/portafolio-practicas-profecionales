@@ -2,9 +2,21 @@
 // Se usa la misma clave que antes para no perder los usuarios ya cargados.
 const CLAVE_USUARIOS = 'portfolioLucasClientes';
 
-// Devuelve la lista de usuarios guardados (o una lista vacía).
+// Usuarios inventados para que la tabla no arranque vacía.
+const USUARIOS_EJEMPLO = [
+    { id: 1, nombre: 'Lucía', apellido: 'Pérez', dni: '40111222', mail: 'lucia.perez@example.com' },
+    { id: 2, nombre: 'Martín', apellido: 'Gómez', dni: '42333444', mail: 'martin.gomez@example.com' },
+    { id: 3, nombre: 'Sofía', apellido: 'Fernández', dni: '38555666', mail: 'sofia.fernandez@example.com' },
+    { id: 4, nombre: 'Tomás', apellido: 'Rodríguez', dni: '45777888', mail: 'tomas.rodriguez@example.com' }
+];
+
+// Devuelve la lista de usuarios guardados.
+// La primera vez (cuando todavía no hay nada guardado) carga los usuarios de ejemplo.
 function obtenerUsuarios() {
-    return JSON.parse(localStorage.getItem(CLAVE_USUARIOS)) || [];
+    if (localStorage.getItem(CLAVE_USUARIOS) === null) {
+        guardarUsuarios(USUARIOS_EJEMPLO);
+    }
+    return JSON.parse(localStorage.getItem(CLAVE_USUARIOS));
 }
 
 // Guarda la lista completa de usuarios.
